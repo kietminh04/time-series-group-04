@@ -64,7 +64,7 @@ Nhóm đã xây dựng các lớp mô hình bao gồm:
 | Linear Regression Baseline | 0.0151 | 0.0212 | 17.19% |
 | Linear Regression Fourier | 0.0151 | 0.0209 | 18.02% |
 | XGBoost Regressor | 0.0179 | 0.0266 | 19.73% |
-| PyTorch LSTM (Advanced) | 0.2324 | 0.3394 | 281.81% |
+| PyTorch LSTM (Advanced) | 0.2264 | 0.3400 | 192.84% |
 
 ### Nhận xét kết quả:
 * Các mô hình hồi quy tuyến tính (LR Baseline và LR Fourier) cho kết quả MAE tốt nhất (0.0151) trên tập dữ liệu ETTm2 tần suất 15 phút.
