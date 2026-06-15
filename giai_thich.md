@@ -130,3 +130,39 @@ for xb, yb in train_loader:
     # Tính toán...
 ```
 *(Đoạn code trong file `tv3_deeplearning.py` của bạn bạn đã được viết sẵn cấu trúc `.to(DEVICE)` này, chỉ cần cài đúng PyTorch GPU là hệ thống sẽ tự động chạy bằng card đồ họa của máy).*
+
+---
+
+### 5. Tại sao mô hình lại dừng sớm (Early Stopping) ở Epoch 20?
+
+Trong nhật ký huấn luyện của bạn, mô hình LSTM đã kích hoạt tính năng **Dừng sớm (Early Stopping)** tại epoch 20 thay vì chạy đủ 50 epochs:
+```text
+  Epoch  10/50: train=0.001604 | val=0.000504  <-- Điểm val loss tốt nhất (Thấp nhất)
+  ...
+  Epoch  20/50: train=0.001324 | val=0.000843  
+  Early stopping tại epoch 20 (best val=0.000504)
+```
+
+#### Nguyên nhân:
+1. **Patience (Độ kiên nhẫn)** được cài đặt là **`PATIENCE = 10`**. Điều này có nghĩa là nếu sau **10 epoch liên tiếp** mà sai số trên tập xác thực (`val loss`) không có cải tiến nào tốt hơn giá trị tốt nhất đã ghi nhận, mô hình sẽ tự động dừng quá trình huấn luyện.
+2. Từ Epoch 10 đến Epoch 20 (đúng 10 epochs), sai số trên tập Validation liên tục dao động lớn hơn mốc tốt nhất là `0.000504` (cụ thể Epoch 20 vọt lên `0.000843`), trong khi sai số tập Train vẫn giảm (`0.001604` xuống `0.001324`).
+3. **Ý nghĩa**: Điều này báo hiệu mô hình bắt đầu bị **quá khớp (overfitting)** — nó đang cố "học vẹt" dữ liệu huấn luyện và làm suy giảm khả năng dự báo trên dữ liệu thực tế. Việc dừng sớm giúp tiết kiệm thời gian chạy máy và giữ lại phiên bản trọng số mô hình tốt nhất ở Epoch 10.
+
+---
+
+### 6. Đường dẫn tải trực tiếp NVIDIA Driver và CUDA Toolkit
+
+Để cấu hình chạy GPU nhanh nhất, bạn tải các bộ cài đặt chính thức từ NVIDIA theo các liên kết dưới đây:
+
+#### 1. NVIDIA Graphics Driver (Trình điều khiển Card đồ họa)
+Bạn nên cài đặt driver bản mới nhất để card đồ họa hoạt động tối ưu:
+* **Trang chủ tìm kiếm Driver tự động**: [NVIDIA Driver Downloads](https://www.nvidia.com/Download/index.aspx)
+  *(Chọn dòng Card đồ họa của máy bạn, chọn Windows 10/11 và bấm Search để tải bản phù hợp nhất).*
+
+#### 2. CUDA Toolkit (Bộ thư viện lập trình GPU)
+Khuyên dùng phiên bản **11.8** hoặc **12.1** vì đây là hai phiên bản ổn định nhất và tương thích rộng rãi nhất với thư viện PyTorch hiện tại:
+* **CUDA Toolkit 11.8 (Khuyên dùng nhiều nhất)**: [Tải trực tiếp CUDA 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive)
+* **CUDA Toolkit 12.1 (Bản nâng cao)**: [Tải trực tiếp CUDA 12.1](https://developer.nvidia.com/cuda-12-1-0-download-archive)
+* **Thư mục lưu trữ tất cả phiên bản (Archive)**: [NVIDIA CUDA Toolkit Archive](https://developer.nvidia.com/cuda-toolkit-archive)
+
+*Lưu ý khi cài đặt*: Chọn phiên bản hệ điều hành Windows (thường là x86_64, Windows 11 hoặc 10, chọn kiểu cài đặt **exe (local)** để tải toàn bộ gói về máy chạy cài đặt ngoại tuyến cho ổn định). Cài đặt xong, hãy khởi động lại máy tính trước khi thử cài đặt PyTorch GPU.
