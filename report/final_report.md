@@ -9,20 +9,20 @@ Bài toán được nghiên cứu là dự báo biến mục tiêu một chiều
 ---
 
 ## 2. Tóm tắt 3 bài báo nghiên cứu
-Nhóm đã tìm hiểu và tóm tắt 3 bài báo khoa học nổi bật về dự báo chuỗi thời gian:
+Nhóm đã tìm hiểu và tóm tắt 3 bài báo khoa học nổi bật và cập nhật gần đây về dự báo chuỗi thời gian:
 
 ### A. iTransformer: Inverted Transformers Are Effective for Time Series Forecasting (2023 - ICLR 2024)
 * **Ý tưởng chính**: Thay vì xem các bước thời gian là token, iTransformer đảo chiều để xem toàn bộ chuỗi lịch sử của một biến là một token.
 * **Điểm mạnh**: Học tương quan giữa các biến (multivariate correlation) rất tốt bằng Self-Attention toàn cục.
 * **Hạn chế**: Không tối ưu cho dữ liệu đơn biến và có độ phức tạp cao theo bình phương số biến $O(N^2)$.
 
-### B. PatchTST: A Time Series is Worth 64 Words (2022 - ICLR 2023)
-* **Ý tưởng chính**: Chia chuỗi thời gian thành các đoạn (patches) làm token và áp dụng cơ chế xử lý độc lập từng kênh (Channel Independence).
-* **Điểm mạnh**: Giảm độ dài chuỗi token giúp giảm chi phí tính toán và giữ lại cấu trúc cục bộ tốt hơn.
-* **Hạn chế**: Bỏ qua mối quan hệ tương quan chéo trực tiếp giữa các biến đầu vào.
+### B. TimesFM: A Decoder-Only Foundation Model for Time-Series Forecasting (Google Research, 2024 - ICML 2024)
+* **Ý tưởng chính**: Phát triển mô hình nền tảng (Foundation Model) Decoder-only dựa trên causal Transformer, được huấn luyện trước trên 100 tỷ điểm dữ liệu thực tế.
+* **Điểm mạnh**: Suy luận Zero-shot cực nhanh và chính xác cao trên các tập dữ liệu mới mà không cần huấn luyện lại. Kích thước gọn nhẹ (200M tham số).
+* **Hạn chế**: Giới hạn độ dài ngữ cảnh lịch sử đầu vào (512 bước) và ban đầu được thiết kế cho đơn biến (univariate).
 
 ### C. Timer: Generative Pre-trained Transformers Are Large Time Series Models (2024 - ICML 2024)
-* **Ý tưởng chính**: Phát triển mô hình nền tảng (Foundation Model) dạng Decoder-only pre-trained trên hàng tỷ điểm dữ liệu.
+* **Ý tưởng chính**: Phát triển mô hình nền tảng (Foundation Model) dạng GPT-style pre-trained trên hàng tỷ điểm dữ liệu.
 * **Điểm mạnh**: Cho phép dự báo Zero-shot (không cần huấn luyện lại) và Few-shot rất tốt trên các tập dữ liệu mới.
 * **Hạn chế**: Mô hình rất lớn (1.3 tỷ tham số), đòi hỏi tài nguyên tính toán và GPU rất mạnh.
 
@@ -76,4 +76,4 @@ Nhóm đã xây dựng các lớp mô hình bao gồm:
 
 ## 5. Kết luận
 * Dự án đã giải quyết thành công bài toán dự báo chuỗi thời gian nhiều chiều bằng cách thiết lập hệ thống từ phân tích Fourier (FFT), tạo đặc trưng mùa vụ cho đến việc so sánh các mô hình Machine Learning và Deep Learning.
-* Trong tương lai, nhóm có thể mở rộng thử nghiệm với mô hình iTransformer hoặc các giải pháp Zero-shot từ Timer nếu có thêm tài nguyên GPU lớn hơn.
+* Trong tương lai, nhóm có thể mở rộng thử nghiệm với các giải pháp Zero-shot từ TimesFM và Timer nếu có thêm tài nguyên GPU lớn hơn.

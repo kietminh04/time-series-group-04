@@ -1,29 +1,27 @@
-# Paper 2: PatchTST
+# Paper 2: TimesFM
 
 ## Details
-- **Title**: A Time Series is Worth 64 Words: Long-term Forecasting with Transformers
-- **Authors**: Yuqi Nie, et al.
-- **Year**: 2022 (ICLR 2023)
-- **Link/Reference**: [arXiv:2211.14730](https://arxiv.org/abs/2211.14730)
-- **Keywords**: Patch-based, channel independence, self-supervised
+- **Title**: A Decoder-Only Foundation Model for Time-Series Forecasting
+- **Authors**: Google Research, et al.
+- **Year**: 2024 (ICML 2024)
+- **Link/Reference**: [arXiv:2310.10688](https://arxiv.org/abs/2310.10688)
+- **Keywords**: Foundation model, decoder-only, zero-shot
 
 ## Summary
 ### Vấn đề nghiên cứu
-Kiến trúc Transformer truyền thống gặp vấn đề độ phức tạp tính toán và bộ nhớ lớn bậc $O(L^2)$ theo chiều dài chuỗi $L$. Điều này khiến mô hình gặp khó khăn khi xử lý dữ liệu lịch sử dài (lookback window lớn) để dự báo dài hạn.
+Sự thành công của các mô hình nền tảng (Foundation Models) trong xử lý ngôn ngữ tự nhiên (NLP) chưa được tái hiện tương đương trong lĩnh vực chuỗi thời gian, nơi phần lớn các mô hình vẫn là dạng chuyên biệt (task-specific) và được huấn luyện từ đầu trên tập dữ liệu nhỏ.
 
 ### Ý tưởng chính & Mô hình đề xuất
-Đề xuất hai kỹ thuật cốt lõi:
-1. **Patching**: Chia chuỗi thời gian thành các phân đoạn nhỏ (patches, ví dụ độ dài 16 bước) làm token đầu vào. Việc này giúp giảm số lượng token đi khoảng 16 lần, qua đó giảm độ phức tạp tính toán và lưu giữ được cấu trúc lân cận cục bộ tốt hơn.
-2. **Channel Independence (Độc lập kênh)**: Xử lý mỗi biến độc lập như một chuỗi đơn biến, chia sẻ chung trọng số của Transformer để tránh nhiễu và tăng độ ổn định của việc huấn luyện.
+Đề xuất **TimesFM** - một mô hình nền tảng Decoder-only sử dụng cấu trúc causal Transformer. Dữ liệu được chia thành các phân đoạn (patching) và mô hình học cách dự báo tự hồi quy (autoregressive) trên tập dữ liệu huấn luyện trước khổng lồ chứa hơn 100 tỷ điểm dữ liệu thực tế từ các nguồn công cộng lẫn dữ liệu tìm kiếm.
 
 ### Kết quả chính
-- Giảm sai số trung bình (MSE) khoảng 21% trên các bộ dữ liệu tiêu chuẩn.
-- Đạt hiệu năng vượt trội so với Autoformer, Informer, DLinear và N-BEATS.
-- Tiết kiệm bộ nhớ GPU và thời gian chạy đáng kể nhờ số lượng token nhỏ.
+- Đạt hiệu năng dự báo Zero-shot (dự báo ngay lập tức) xuất sắc trên nhiều bộ dữ liệu benchmark khác nhau (như Monash, M4, ETT).
+- Vượt qua mô hình iTransformer ở chế độ Zero-shot.
+- Mô hình có kích thước gọn nhẹ (chỉ 200 triệu tham số), giúp thời gian suy luận (inference) cực kỳ nhanh.
 
 ### Điểm mạnh & Hạn chế
-- **Ưu điểm**: Giảm chiều dài chuỗi token đầu vào giúp huấn luyện nhẹ và nhanh hơn. Hỗ trợ học tự giám sát (Self-supervised learning) bằng cách che đi một phần các patch rồi dự báo lại chúng để tận dụng dữ liệu chưa được gán nhãn.
-- **Nhược điểm**: Bỏ qua mối quan hệ tương quan chéo trực tiếp giữa các biến số (do cơ chế Channel Independence), làm giảm hiệu năng nếu các biến phụ thuộc chặt chẽ vào nhau. Kích thước patch phải chỉnh tay. Cần cửa sổ lịch sử dài mới phát huy tốt sức mạnh.
+- **Ưu điểm**: Nhẹ hơn nhiều so với các mô hình nền tảng khác như Timer (1.3 tỷ tham số) nên có thể chạy suy luận dễ dàng trên các máy cấu hình yếu. Checkpoint được Google công bố công khai, khả năng sử dụng thực tế rất cao.
+- **Nhược điểm**: Giới hạn độ dài ngữ cảnh lịch sử đầu vào (context length) là 512 bước, gây hạn chế với các chuỗi cần lịch sử rất dài (như chu kỳ mùa vụ năm). Bản gốc chủ yếu hỗ trợ chuỗi đơn biến (univariate), chưa xử lý trực tiếp các biến phụ thuộc bổ sung (covariates). Kiến trúc Decoder-only không có Encoder nên kém ổn định hơn với dữ liệu có nhiều nhiễu và non-stationary.
 
 ## Khả năng áp dụng cho bài toán của nhóm
-Rất cao. PatchTST hiện đang được tích hợp rộng rãi trong các thư viện dự báo chuỗi thời gian. Mô hình này rất phù hợp làm baseline Transformer nâng cao của nhóm để so sánh trực tiếp với DLinear hoặc LSTM.
+Rất cao. Vì Google đã công bố rộng rãi mã nguồn và checkpoint của TimesFM, nhóm có thể dễ dàng tải mô hình về chạy suy luận Zero-shot trên tập dữ liệu phụ tải điện của nhóm để so sánh hiệu quả dự báo của một mô hình nền tảng lớn so với các mô hình baseline truyền thống.
