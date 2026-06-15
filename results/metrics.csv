@@ -1,0 +1,3 @@
+model,mae,rmse,mape
+baseline_linear_regression,,,
+advanced_random_forest,,,
