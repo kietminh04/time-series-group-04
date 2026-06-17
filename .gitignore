@@ -101,8 +101,9 @@ data/processed/*
 !data/processed/.gitkeep
 figures/*
 !figures/.gitkeep
-!figures/y_true_vs_y_pred.png
+!figures/*.png
 results/*
 !results/metrics.csv
+!results/predictions_sarimax.csv
 !results/.gitkeep
 
